@@ -16,6 +16,7 @@ import {
   TabNavigationState,
   useRoute,
 } from "@react-navigation/native";
+import { AntDesign } from "@expo/vector-icons";
 
 export type BottomTabParamList = {
   Home: undefined;
@@ -68,22 +69,42 @@ const BottomTabs: React.FC<IProps> = () => {
       <Tab.Screen
         name="Home"
         component={Home}
-        options={{ tabBarLabel: "首页" }}
+        options={{
+          tabBarLabel: "首页",
+          tabBarIcon: ({ color, size }) => (
+            <AntDesign name="home" size={size} color={color} />
+          ),
+        }}
       />
       <Tab.Screen
         name="Listen"
         component={Listen}
-        options={{ tabBarLabel: "我听" }}
+        options={{
+          tabBarLabel: "我听",
+          tabBarIcon: ({ color, size }) => (
+            <AntDesign name="staro" size={size} color={color} />
+          ),
+        }}
       />
       <Tab.Screen
         name="Found"
         component={Found}
-        options={{ tabBarLabel: "发现" }}
+        options={{
+          tabBarLabel: "发现",
+          tabBarIcon: ({ color, size }) => (
+            <AntDesign name="search1" size={size} color={color} />
+          ),
+        }}
       />
       <Tab.Screen
         name="Account"
         component={Account}
-        options={{ tabBarLabel: "我的" }}
+        options={{
+          tabBarLabel: "我的",
+          tabBarIcon: ({ color, size }) => (
+            <AntDesign name="user" size={size} color={color} />
+          ),
+        }}
       />
     </Tab.Navigator>
   );

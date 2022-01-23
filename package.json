@@ -16,6 +16,7 @@
     "@react-navigation/stack": "^6.0.11",
     "@types/react-redux": "^7.1.22",
     "dva-core-ts": "^2.0.7",
+    "dva-loading-ts": "^3.0.23",
     "expo": "~44.0.0",
     "expo-constants": "~13.0.0",
     "expo-status-bar": "~1.2.0",
@@ -26,6 +27,7 @@
     "react-native-reanimated": "~2.3.1",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
+    "react-native-svg": "12.1.1",
     "react-native-web": "0.17.1",
     "react-redux": "^7.2.6"
   },
