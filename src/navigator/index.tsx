@@ -1,14 +1,19 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  getFocusedRouteNameFromRoute,
+  RouteProp,
+} from "@react-navigation/native";
 import {
   createStackNavigator,
   StackNavigationProp,
   HeaderStyleInterpolators,
   CardStyleInterpolators,
+  StackScreenProps,
 } from "@react-navigation/stack";
 import BottomTabs from "./BottomTabs";
 import Detail from "@/pages/Detail";
-import { Platform, StyleSheet } from "react-native";
+import { Platform, StyleSheet, StatusBar } from "react-native";
 
 export type RootStackParamList = {
   BottomTabs: {
@@ -23,6 +28,22 @@ export type RootStackNavigation = StackNavigationProp<RootStackParamList>;
 
 const Stack = createStackNavigator<RootStackParamList>();
 
+function getHeaderTitle(route: RouteProp<RootStackParamList, "BottomTabs">) {
+  const routeName = getFocusedRouteNameFromRoute(route) ?? "HomeTabs";
+  switch (routeName) {
+    case "HomeTabs":
+      return "首页";
+    case "Listen":
+      return "我听";
+    case "Found":
+      return "发现";
+    case "Account":
+      return "账户";
+    default:
+      return "首页";
+  }
+}
+
 const Navigator = () => {
   return (
     <NavigationContainer>
@@ -34,7 +55,7 @@ const Navigator = () => {
           gestureDirection: "horizontal",
           headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-
+          headerStatusBarHeight: StatusBar.currentHeight,
           headerStyle: {
             ...Platform.select({
               android: {
@@ -48,7 +69,9 @@ const Navigator = () => {
         <Stack.Screen
           name="BottomTabs"
           component={BottomTabs}
-          options={{ headerTitle: "首页" }}
+          options={({ route }) => ({
+            headerTitle: getHeaderTitle(route),
+          })}
         />
         <Stack.Screen
           name="Detail"

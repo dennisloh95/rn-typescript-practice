@@ -17,9 +17,10 @@ import {
   useRoute,
 } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
+import HomeTabs from "./HomeTabs";
 
 export type BottomTabParamList = {
-  Home: undefined;
+  HomeTabs: undefined;
   Listen: undefined;
   Found: undefined;
   Account: undefined;
@@ -40,24 +41,6 @@ interface IProps {
   route: Route;
 }
 
-const getHeaderTitle = (data: any) => {
-  const routeName = data.state
-    ? data.state.routes[data.state.index].name
-    : "Home";
-  switch (routeName) {
-    case "Home":
-      return "首页";
-    case "Listen":
-      return "我听";
-    case "Found":
-      return "发现";
-    case "Account":
-      return "账户";
-    default:
-      return "首页";
-  }
-};
-
 const BottomTabs: React.FC<IProps> = () => {
   return (
     <Tab.Navigator
@@ -67,8 +50,8 @@ const BottomTabs: React.FC<IProps> = () => {
       }}
     >
       <Tab.Screen
-        name="Home"
-        component={Home}
+        name="HomeTabs"
+        component={HomeTabs}
         options={{
           tabBarLabel: "首页",
           tabBarIcon: ({ color, size }) => (

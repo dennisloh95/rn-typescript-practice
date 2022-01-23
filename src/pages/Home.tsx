@@ -15,12 +15,6 @@ const Home: React.FC<IProps> = (props) => {
   } = useSelector((state: RootState) => state);
   const dispatch = useDispatch();
 
-  // console.log(loading.effects["home/asyncAdd"]);
-
-  useEffect(() => {
-    console.log(loading);
-  }, [loading]);
-
   const handleAdd = () => {
     dispatch({
       type: "home/add",
