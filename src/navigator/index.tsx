@@ -44,7 +44,7 @@ function getHeaderTitle(route: RouteProp<RootStackParamList, "BottomTabs">) {
   // }
   switch (routeName) {
     case "HomeTabs":
-      return "首页";
+      return "";
     case "Listen":
       return "我听";
     case "Found":
@@ -86,6 +86,8 @@ const Navigator = () => {
           component={BottomTabs}
           options={({ route }) => ({
             headerTitle: getHeaderTitle(route),
+            headerTransparent:
+              getFocusedRouteNameFromRoute(route) === "HomeTabs" ? true : false,
           })}
         />
         <Stack.Screen

@@ -4,31 +4,29 @@ import {
   View,
   Text,
   ListRenderItemInfo,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+  StyleSheet,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { RootStackNavigation } from "@/navigator/index";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/models/index";
-import Carousel from "@/pages/Home/Carousel";
+import Carousel, { slideHeight } from "@/pages/Home/Carousel";
 import Guess from "@/pages/Home/Guess";
 import ChannelItem from "@/pages/Home/ChannelItem";
 import { IChannel } from "@/models/home";
-import { StyleSheet } from "react-native";
 
 interface IProps {
   navigation: RootStackNavigation;
 }
 
-interface IState {
-  refreshing: boolean;
-}
-
-const Home: React.FC<IProps> = (props) => {
+const Home: React.FC<IProps> = () => {
   const {
     home: {
-      carousels,
       channels,
       pagination: { hasMore },
+      gradientVisible,
     },
     loading: { effects: loading },
   } = useSelector((state: RootState) => state);
@@ -57,8 +55,10 @@ const Home: React.FC<IProps> = (props) => {
   function header() {
     return (
       <View>
-        <Carousel data={carousels} />
-        <Guess />
+        <Carousel />
+        <View style={styles.background}>
+          <Guess />
+        </View>
       </View>
     );
   }
@@ -114,6 +114,21 @@ const Home: React.FC<IProps> = (props) => {
     });
   };
 
+  const onScroll = ({
+    nativeEvent,
+  }: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const offSetY = nativeEvent.contentOffset.y;
+    let newGradientVisible = offSetY < slideHeight;
+    if (gradientVisible !== newGradientVisible) {
+      dispatch({
+        type: "home/setState",
+        payload: {
+          gradientVisible: newGradientVisible,
+        },
+      });
+    }
+  };
+
   return (
     <FlatList
       ListHeaderComponent={header()}
@@ -126,6 +141,7 @@ const Home: React.FC<IProps> = (props) => {
       refreshing={refreshing}
       onEndReached={onEndReached}
       onEndReachedThreshold={0.2}
+      onScroll={onScroll}
     />
   );
 };
@@ -142,6 +158,9 @@ const styles = StyleSheet.create({
   empty: {
     alignItems: "center",
     paddingVertical: 100,
+  },
+  background: {
+    backgroundColor: "#fff",
   },
 });
 

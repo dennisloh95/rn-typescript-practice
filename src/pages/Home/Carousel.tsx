@@ -7,18 +7,20 @@ import SnapCarousel, {
 } from "react-native-snap-carousel";
 import { hp, viewportWidth, wp } from "@/utils/index";
 import { ICarousel } from "@/models/home";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/models/index";
 
 const sliderWidth = viewportWidth;
 const slideWidth = wp(90);
-const slideHeight = hp(26);
+export const slideHeight = hp(26);
 const itemWidth = slideWidth + wp(2) * 2;
 
-interface IProps {
-  data: ICarousel[];
-}
-
-const Carousel: React.FC<IProps> = ({ data }) => {
-  const [activeSlide, setActiveSlide] = useState(0);
+const Carousel: React.FC = () => {
+  const {
+    home: { carousels: data, activeCarouselIndex },
+  } = useSelector((state: RootState) => state);
+  const dispatch = useDispatch();
+  data;
 
   const renderItem = (
     { item }: { item: ICarousel },
@@ -38,7 +40,12 @@ const Carousel: React.FC<IProps> = ({ data }) => {
   };
 
   const onSnapToItem = (index: number) => {
-    setActiveSlide(index);
+    dispatch({
+      type: "home/setState",
+      payload: {
+        activeCarouselIndex: index,
+      },
+    });
   };
 
   const PaginationItem = () => {
@@ -47,7 +54,7 @@ const Carousel: React.FC<IProps> = ({ data }) => {
         <Pagination
           containerStyle={styles.paginationContainer}
           dotsLength={data.length}
-          activeDotIndex={activeSlide}
+          activeDotIndex={activeCarouselIndex}
           dotStyle={styles.dot}
           dotContainerStyle={styles.dotContainer}
           inactiveDotScale={0.7}
