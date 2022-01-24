@@ -1,23 +1,18 @@
 import React, { useEffect } from "react";
-import {
-  createBottomTabNavigator,
-  BottomTabBarProps,
-} from "@react-navigation/bottom-tabs";
-import Home from "@/pages/Home";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Listen from "@/pages/Listen";
 import Found from "@/pages/Found";
 import Account from "@/pages/Account";
 import { RootStackNavigation, RootStackParamList } from ".";
 import {
-  EventArg,
   NavigationState,
   ParamListBase,
   RouteProp,
   TabNavigationState,
-  useRoute,
 } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import HomeTabs from "./HomeTabs";
+import * as Haptics from "expo-haptics";
 
 export type BottomTabParamList = {
   HomeTabs: undefined;
@@ -47,6 +42,11 @@ const BottomTabs: React.FC<IProps> = () => {
       screenOptions={{
         tabBarActiveTintColor: "#f86442",
         headerShown: false,
+      }}
+      screenListeners={{
+        tabPress: () => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        },
       }}
     >
       <Tab.Screen

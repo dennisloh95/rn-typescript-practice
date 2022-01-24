@@ -15,7 +15,7 @@ const Listen: React.FC<IProps> = (props) => {
   return (
     <View>
       <Text>Listen</Text>
-      <Button onPress={onPress} title="跳转" />
+      <Button onPress={onPress} title="Jump" />
     </View>
   );
 };

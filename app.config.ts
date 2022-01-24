@@ -5,7 +5,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   name: "hello-world",
   slug: "hello-world",
   extra: {
-    apiUrl: process.env.API_URL,
-    mode: process.env.MODE,
+    // apiUrl: process.env.API_URL,
   },
 });

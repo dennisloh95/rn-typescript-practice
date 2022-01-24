@@ -9,11 +9,11 @@ import {
   StackNavigationProp,
   HeaderStyleInterpolators,
   CardStyleInterpolators,
-  StackScreenProps,
 } from "@react-navigation/stack";
 import BottomTabs from "./BottomTabs";
 import Detail from "@/pages/Detail";
 import { Platform, StyleSheet, StatusBar } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export type RootStackParamList = {
   BottomTabs: {
@@ -30,6 +30,18 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 function getHeaderTitle(route: RouteProp<RootStackParamList, "BottomTabs">) {
   const routeName = getFocusedRouteNameFromRoute(route) ?? "HomeTabs";
+  // switch (routeName) {
+  //   case "HomeTabs":
+  //     return "Home";
+  //   case "Listen":
+  //     return routeName;
+  //   case "Found":
+  //     return routeName;
+  //   case "Account":
+  //     return routeName;
+  //   default:
+  //     return "Home";
+  // }
   switch (routeName) {
     case "HomeTabs":
       return "首页";
@@ -45,6 +57,8 @@ function getHeaderTitle(route: RouteProp<RootStackParamList, "BottomTabs">) {
 }
 
 const Navigator = () => {
+  const insets = useSafeAreaInsets();
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -55,7 +69,8 @@ const Navigator = () => {
           gestureDirection: "horizontal",
           headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-          headerStatusBarHeight: StatusBar.currentHeight,
+          headerStatusBarHeight:
+            Platform.OS === "ios" ? insets.top : StatusBar.currentHeight,
           headerStyle: {
             ...Platform.select({
               android: {

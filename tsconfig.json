@@ -17,6 +17,7 @@
       "@/navigator/*": ["navigator/*"],
       "@/pages/*": ["pages/*"],
       "@/utils/*": ["utils/*"]
-    }
+    },
+    "typeRoots": ["./types"]
   }
 }
