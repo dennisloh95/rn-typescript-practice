@@ -7,40 +7,105 @@ import _ from "lodash";
 import Item from "./Item";
 import { RootStackNavigation } from "@/navigator/index";
 import HeaderRightBtn from "./HeaderRightBtn";
+import Touchable from "@/components/Touchable";
+import { useEffect } from "react";
+import * as Haptics from "expo-haptics";
 
 interface IProps {
   navigation: RootStackNavigation;
 }
 
+const fixedItems = [0, 1];
+
 const Category: React.FC<IProps> = ({ navigation }) => {
   const {
-    category: { myCategories, categories },
+    category: { myCategories, categories, isEdit },
   } = useSelector((state: RootState) => state);
   const dispatch = useDispatch();
-  console.log({ myCategories, categories });
   const [localMyCategories, setLocalMyCategories] = useState(myCategories);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <HeaderRightBtn onSubmit={onSubmit} />,
+    });
+
+    return () => {
+      dispatch({
+        type: "category/setState",
+        payload: {
+          isEdit: false,
+        },
+      });
+    };
+  }, []);
 
   const onSubmit = () => {
     dispatch({
       type: "category/toggle",
+      payload: {
+        myCategories: localMyCategories,
+      },
     });
   };
 
-  navigation.setOptions({
-    headerRight: () => <HeaderRightBtn onSubmit={onSubmit} />,
-  });
-
   const classifyGroup = _.groupBy(categories, (item) => item.classify);
 
-  function renderItem(item: ICategory) {
-    return <Item data={item} key={item.id} />;
+  const onLongPress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    dispatch({
+      type: "category/setState",
+      payload: {
+        isEdit: true,
+      },
+    });
+  };
+
+  const onPress = (item: ICategory, index: number, selected: boolean) => {
+    const disabled = fixedItems.indexOf(index) > -1;
+    if (disabled && selected) return;
+    if (isEdit) {
+      if (selected) {
+        setLocalMyCategories(
+          localMyCategories.filter(
+            (selectedItem) => selectedItem.id !== item.id
+          )
+        );
+      } else {
+        setLocalMyCategories(localMyCategories.concat([item]));
+      }
+    }
+  };
+
+  function renderItem(item: ICategory, index: number) {
+    const disabled = fixedItems.indexOf(index) > -1;
+    return (
+      <Touchable
+        key={item.id}
+        onLongPress={onLongPress}
+        onPress={() => onPress(item, index, true)}
+      >
+        <Item data={item} disabled={disabled} isEdit={isEdit} selected={true} />
+      </Touchable>
+    );
+  }
+
+  function renderUnSelectedItem(item: ICategory, index: number) {
+    return (
+      <Touchable
+        key={item.id}
+        onLongPress={onLongPress}
+        onPress={() => onPress(item, index, false)}
+      >
+        <Item disabled={false} data={item} isEdit={isEdit} selected={false} />
+      </Touchable>
+    );
   }
 
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.classifyName}>我的分类</Text>
       <View style={styles.classifyView}>
-        {localMyCategories.map(renderItem)}
+        {localMyCategories.map((item, index) => renderItem(item, index))}
       </View>
       <View>
         {Object.keys(classifyGroup).map((classify) => {
@@ -48,7 +113,16 @@ const Category: React.FC<IProps> = ({ navigation }) => {
             <View key={classify}>
               <Text style={styles.classifyName}>{classify}</Text>
               <View style={styles.classifyView}>
-                {classifyGroup[classify].map(renderItem)}
+                {classifyGroup[classify].map((item, index) => {
+                  if (
+                    localMyCategories.find(
+                      (selectedItem) => selectedItem.id === item.id
+                    )
+                  ) {
+                    return null;
+                  }
+                  return renderUnSelectedItem(item, index);
+                })}
               </View>
             </View>
           );

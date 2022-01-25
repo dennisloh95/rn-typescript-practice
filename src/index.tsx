@@ -10,12 +10,12 @@ export default function Main() {
     <Provider store={store}>
       <SafeAreaProvider>
         <Navigator />
+        <StatusBar
+          backgroundColor="transparent"
+          translucent
+          barStyle="dark-content"
+        />
       </SafeAreaProvider>
-      <StatusBar
-        backgroundColor="transparent"
-        translucent
-        barStyle="dark-content"
-      />
     </Provider>
   );
 }

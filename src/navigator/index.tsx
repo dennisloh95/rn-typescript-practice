@@ -14,7 +14,6 @@ import BottomTabs from "./BottomTabs";
 import Detail from "@/pages/Detail";
 import Category from "@/pages/Category";
 import { Platform, StyleSheet, StatusBar } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export type RootStackParamList = {
   BottomTabs: {
@@ -59,8 +58,6 @@ function getHeaderTitle(route: RouteProp<RootStackParamList, "BottomTabs">) {
 }
 
 const Navigator = () => {
-  const insets = useSafeAreaInsets();
-
   return (
     <NavigationContainer>
       <Stack.Navigator
