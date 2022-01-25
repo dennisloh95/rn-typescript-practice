@@ -32,12 +32,17 @@ const TopTabBarWrapper: React.FC<IProps> = (props) => {
     textStyle = styles.whiteText;
   }
 
+  const goCategory = () => {
+    const { navigation } = props;
+    navigation.navigate("Category");
+  };
+
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       {linearGradient()}
       <View style={styles.topTabBarView}>
         <MaterialTopTabBar {...props} />
-        <Touchable style={styles.categoryBtn}>
+        <Touchable style={styles.categoryBtn} onPress={goCategory}>
           <Text style={textStyle}>分类</Text>
         </Touchable>
       </View>

@@ -12,6 +12,7 @@ import {
 } from "@react-navigation/stack";
 import BottomTabs from "./BottomTabs";
 import Detail from "@/pages/Detail";
+import Category from "@/pages/Category";
 import { Platform, StyleSheet, StatusBar } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -19,6 +20,7 @@ export type RootStackParamList = {
   BottomTabs: {
     screen?: string;
   };
+  Category: undefined;
   Detail: {
     id: number;
   };
@@ -63,14 +65,20 @@ const Navigator = () => {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
+          headerBackTitle: "返回",
+          headerTintColor: "#333",
+          headerBackTitleVisible: false,
           headerMode: "float",
           headerTitleAlign: "center",
           gestureEnabled: true,
           gestureDirection: "horizontal",
           headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-          headerStatusBarHeight:
-            Platform.OS === "ios" ? insets.top : StatusBar.currentHeight,
+          ...Platform.select({
+            android: {
+              headerStatusBarHeight: StatusBar.currentHeight,
+            },
+          }),
           headerStyle: {
             ...Platform.select({
               android: {
@@ -89,6 +97,11 @@ const Navigator = () => {
             headerTransparent:
               getFocusedRouteNameFromRoute(route) === "HomeTabs" ? true : false,
           })}
+        />
+        <Stack.Screen
+          name="Category"
+          component={Category}
+          options={{ headerTitle: "分类" }}
         />
         <Stack.Screen
           name="Detail"
