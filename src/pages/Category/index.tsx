@@ -1,15 +1,16 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/models/index";
 import { ICategory } from "@/models/category";
 import _ from "lodash";
-import Item from "./Item";
+import Item, { parentWidth, itemWidth, itemHeight, itemMargin } from "./Item";
 import { RootStackNavigation } from "@/navigator/index";
 import HeaderRightBtn from "./HeaderRightBtn";
 import Touchable from "@/components/Touchable";
 import { useEffect } from "react";
 import * as Haptics from "expo-haptics";
+import { DragSortableView } from "react-native-drag-sort";
 
 interface IProps {
   navigation: RootStackNavigation;
@@ -23,12 +24,27 @@ const Category: React.FC<IProps> = ({ navigation }) => {
   } = useSelector((state: RootState) => state);
   const dispatch = useDispatch();
   const [localMyCategories, setLocalMyCategories] = useState(myCategories);
+  const [scrollEnabled, setScrollEnbled] = useState(true);
 
   useEffect(() => {
+    const onSubmit = () => {
+      dispatch({
+        type: "category/toggle",
+        payload: {
+          myCategories: localMyCategories,
+        },
+      });
+      if (isEdit) {
+        navigation.goBack();
+      }
+    };
+
     navigation.setOptions({
       headerRight: () => <HeaderRightBtn onSubmit={onSubmit} />,
     });
+  }, [dispatch, navigation, isEdit, localMyCategories]);
 
+  useEffect(() => {
     return () => {
       dispatch({
         type: "category/setState",
@@ -37,16 +53,7 @@ const Category: React.FC<IProps> = ({ navigation }) => {
         },
       });
     };
-  }, []);
-
-  const onSubmit = () => {
-    dispatch({
-      type: "category/toggle",
-      payload: {
-        myCategories: localMyCategories,
-      },
-    });
-  };
+  }, [dispatch]);
 
   const classifyGroup = _.groupBy(categories, (item) => item.classify);
 
@@ -76,16 +83,14 @@ const Category: React.FC<IProps> = ({ navigation }) => {
     }
   };
 
+  const onDateChange = (data: ICategory[]) => {
+    setLocalMyCategories(data);
+  };
+
   function renderItem(item: ICategory, index: number) {
     const disabled = fixedItems.indexOf(index) > -1;
     return (
-      <Touchable
-        key={item.id}
-        onLongPress={onLongPress}
-        onPress={() => onPress(item, index, true)}
-      >
-        <Item data={item} disabled={disabled} isEdit={isEdit} selected={true} />
-      </Touchable>
+      <Item data={item} disabled={disabled} isEdit={isEdit} selected={true} />
     );
   }
 
@@ -96,16 +101,32 @@ const Category: React.FC<IProps> = ({ navigation }) => {
         onLongPress={onLongPress}
         onPress={() => onPress(item, index, false)}
       >
-        <Item disabled={false} data={item} isEdit={isEdit} selected={false} />
+        <Item data={item} isEdit={isEdit} selected={false} />
       </Touchable>
     );
   }
 
+  const onClickItem = (data: ICategory[], item: ICategory) => {
+    onPress(item, data.indexOf(item), true);
+  };
+
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} scrollEnabled={scrollEnabled}>
       <Text style={styles.classifyName}>我的分类</Text>
       <View style={styles.classifyView}>
-        {localMyCategories.map((item, index) => renderItem(item, index))}
+        <DragSortableView
+          fixedItems={fixedItems}
+          dataSource={localMyCategories}
+          renderItem={(item, index) => renderItem(item, index)}
+          sortable={isEdit}
+          keyExtractor={(item) => item.id}
+          onDataChange={onDateChange}
+          parentWidth={parentWidth}
+          childrenWidth={itemWidth}
+          childrenHeight={itemHeight}
+          marginChildrenTop={itemMargin}
+          onClickItem={onClickItem}
+        />
       </View>
       <View>
         {Object.keys(classifyGroup).map((classify) => {

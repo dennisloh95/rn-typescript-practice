@@ -9,13 +9,16 @@ import Touchable from "@/components/Touchable";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSelector } from "react-redux";
 import { RootState } from "@/models/index";
+import { useEffect } from "react";
+import { getActiveRouteName } from "@/utils/index";
 
 type IProps = MaterialTopTabBarProps;
 
 const TopTabBarWrapper: React.FC<IProps> = (props) => {
+  const routeName = getActiveRouteName(props.state);
   const insets = useSafeAreaInsets();
-  const { home } = useSelector((state: RootState) => state);
-  const { carousels, gradientVisible, activeCarouselIndex } = home;
+  const state = useSelector((state: RootState) => state);
+  const { carousels, gradientVisible, activeCarouselIndex } = state[routeName];
   function linearGradient() {
     const linearColors = carousels[activeCarouselIndex]?.colors || [
       "#ccc",
@@ -28,9 +31,11 @@ const TopTabBarWrapper: React.FC<IProps> = (props) => {
   }
 
   let textStyle = styles.text;
-  if (gradientVisible) {
-    textStyle = styles.whiteText;
-  }
+  useEffect(() => {
+    if (gradientVisible) {
+      textStyle = styles.whiteText;
+    }
+  }, [gradientVisible, props.navigation]);
 
   const goCategory = () => {
     const { navigation } = props;
@@ -90,7 +95,7 @@ const styles = StyleSheet.create({
   },
   gradient: {
     ...StyleSheet.absoluteFillObject,
-    height: 260,
+    height: 280,
   },
   text: {
     color: "#333",

@@ -1,3 +1,5 @@
+import { createHomeModel } from "@/config/dva";
+import { ICategory } from "@/models/category";
 import Home from "@/pages/Home";
 import Listen from "@/pages/Listen";
 import TopTabBarWrapper from "@/pages/views/TopTabBarWrapper";
@@ -5,19 +7,48 @@ import {
   createMaterialTopTabNavigator,
   MaterialTopTabBarProps,
 } from "@react-navigation/material-top-tabs";
+import { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 import { RootState } from "../models";
 
-const Tab = createMaterialTopTabNavigator();
+export type HomeParamList = {
+  [key: string]: {
+    namespace: string;
+  };
+};
+
+const Tab = createMaterialTopTabNavigator<HomeParamList>();
 
 function renderTabBar(props: MaterialTopTabBarProps) {
   return <TopTabBarWrapper {...props} />;
 }
 
+function renderScreen(item: ICategory) {
+  // useEffect(() => {
+  //   createHomeModel(item.id);
+  // }, []);
+
+  createHomeModel(item.id);
+  return (
+    <Tab.Screen
+      key={item.id}
+      name={item.id}
+      component={Home}
+      options={{
+        title: item.name,
+      }}
+      initialParams={{
+        namespace: item.id,
+      }}
+    />
+  );
+}
+
 const HomeTabs = () => {
   const {
     home: { gradientVisible },
+    category: { myCategories },
   } = useSelector((state: RootState) => state);
 
   return (
@@ -47,20 +78,7 @@ const HomeTabs = () => {
         tabBarInactiveTintColor: "#333",
       }}
     >
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{
-          title: "推荐",
-        }}
-      />
-      <Tab.Screen
-        name="Home1"
-        component={Listen}
-        options={{
-          title: "推荐",
-        }}
-      />
+      {myCategories.map(renderScreen)}
     </Tab.Navigator>
   );
 };

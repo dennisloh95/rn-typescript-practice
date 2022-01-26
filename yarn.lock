@@ -1930,7 +1930,7 @@ babel-preset-fbjs@^3.3.0:
     "@babel/plugin-transform-template-literals" "^7.0.0"
     babel-plugin-syntax-trailing-function-commas "^7.0.0-beta.0"
 
-babel-runtime@^6.22.0:
+babel-runtime@^6.20.0, babel-runtime@^6.22.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
   integrity sha1-llxwWGaOgrVde/4E/yM3vItWR/4=
@@ -2607,6 +2607,13 @@ dva-loading-ts@^3.0.23:
   integrity sha512-+WyVm7OyAC0aUBdy7tPb7upyTJnJ4lyA1yCj2F5FYQ0KolI2KXSnk8tx8OVr38bFmXcns184pt9FE37Puq+J7A==
   dependencies:
     "@babel/runtime" "^7.0.0"
+
+dva-model-extend@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/dva-model-extend/-/dva-model-extend-0.1.2.tgz#a3e615995feaaed5d141eb5b0a26cb98542a9820"
+  integrity sha512-pS/b6UmAN9+3ozLWodwvrZnopoSw29fV435i87QZ7jb/cbqAILzfa04mfOqd9k8SNXCiwZUX3pMmm1cOA81yxA==
+  dependencies:
+    babel-runtime "^6.20.0"
 
 ee-first@1.1.1:
   version "1.1.1"
@@ -4926,6 +4933,11 @@ react-native-dotenv@^3.3.1:
   integrity sha512-gAKXout1XCwCqJ3QPGoQAF2eRzOHgOnwg3x19z+ssow8bDIksJeKBqvoHDyGziVilAIP1J0bEC9Jf+VF8nFang==
   dependencies:
     dotenv "^10.0.0"
+
+react-native-drag-sort@^2.4.4:
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/react-native-drag-sort/-/react-native-drag-sort-2.4.4.tgz#7c7aeea8729423a920b8db5900ea3c704ee1ff29"
+  integrity sha512-MixkgMzybt8tn9m850YK5VOSlicytV41mOp/b1gAE7cK94bou27ApvVJH9oCM61vY5EN6g9VT5PwLOahbYc+BQ==
 
 react-native-gesture-handler@~2.1.0:
   version "2.1.1"

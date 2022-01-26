@@ -7,9 +7,12 @@ import { IGUESS } from "@/models/home";
 import Touchable from "@/components/Touchable";
 import { AntDesign } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
-import { fakeGuess } from "@/utils/fakeData";
 
-const Guess: React.FC = () => {
+interface IProps {
+  namespace: string;
+}
+
+const Guess: React.FC<IProps> = ({ namespace }) => {
   const {
     home: { guess },
   } = useSelector((state: RootState) => state);
@@ -21,7 +24,7 @@ const Guess: React.FC = () => {
 
   const fetch = () => {
     dispatch({
-      type: "home/fetchGuess",
+      type: `${namespace}/fetchGuess`,
     });
   };
 

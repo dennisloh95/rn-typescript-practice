@@ -16,30 +16,36 @@ import Carousel, { slideHeight } from "@/pages/Home/Carousel";
 import Guess from "@/pages/Home/Guess";
 import ChannelItem from "@/pages/Home/ChannelItem";
 import { IChannel } from "@/models/home";
+import { RouteProp } from "@react-navigation/native";
+import { HomeParamList } from "@/navigator/HomeTabs";
 
 interface IProps {
   navigation: RootStackNavigation;
+  route: RouteProp<HomeParamList, string>;
 }
 
-const Home: React.FC<IProps> = () => {
-  const {
-    home: {
-      channels,
-      pagination: { hasMore },
-      gradientVisible,
-    },
-    loading: { effects: loading },
-  } = useSelector((state: RootState) => state);
+const Home: React.FC<IProps> = ({
+  route: {
+    params: { namespace },
+  },
+}) => {
+  const state = useSelector((state: RootState) => state);
+  const carousels = state[namespace].carousels;
+  const channels = state[namespace].channels;
+  const hasMore = state[namespace].pagination.hasMore;
+  const gradientVisible = state[namespace].gradientVisible;
+  const loading = state.loading.effects[`${namespace}/fetchChannels`];
+
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     dispatch({
-      type: "home/fetchCarousels",
+      type: `${namespace}/fetchCarousels`,
     });
 
     dispatch({
-      type: "home/fetchChannels",
+      type: `${namespace}/fetchChannels`,
     });
   }, []);
 
@@ -57,7 +63,7 @@ const Home: React.FC<IProps> = () => {
       <View>
         <Carousel />
         <View style={styles.background}>
-          <Guess />
+          <Guess namespace={namespace} />
         </View>
       </View>
     );
@@ -72,7 +78,7 @@ const Home: React.FC<IProps> = () => {
       );
     }
 
-    if (loading["home/fetchChannels"] && hasMore && channels.length > 0) {
+    if (loading && hasMore && channels.length > 0) {
       return (
         <View style={styles.loading}>
           <Text>正在加载中...</Text>
@@ -82,7 +88,7 @@ const Home: React.FC<IProps> = () => {
   }
 
   function empty() {
-    if (loading["home/fetchChannels"]) return;
+    if (loading) return;
     return (
       <View style={styles.empty}>
         <Text>No data</Text>
@@ -97,7 +103,7 @@ const Home: React.FC<IProps> = () => {
   const onRefresh = () => {
     setRefreshing(true);
     dispatch({
-      type: "home/fetchChannels",
+      type: `${namespace}/fetchChannels`,
       callback: () => {
         setRefreshing(false);
       },
@@ -105,9 +111,9 @@ const Home: React.FC<IProps> = () => {
   };
 
   const onEndReached = () => {
-    if (loading["home/fetchChannels"] || !hasMore) return;
+    if (loading || !hasMore) return;
     dispatch({
-      type: "home/fetchChannels",
+      type: `${namespace}/fetchChannels`,
       payload: {
         loadMore: true,
       },
@@ -121,7 +127,7 @@ const Home: React.FC<IProps> = () => {
     let newGradientVisible = offSetY < slideHeight;
     if (gradientVisible !== newGradientVisible) {
       dispatch({
-        type: "home/setState",
+        type: `${namespace}/setState`,
         payload: {
           gradientVisible: newGradientVisible,
         },

@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     width: itemWidth,
     height: slideHeight,
     borderRadius: 8,
+    backgroundColor: "gray",
   },
   image: {
     ...StyleSheet.absoluteFillObject,
