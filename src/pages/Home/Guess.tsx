@@ -3,16 +3,17 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { RootState } from "@/models/index";
-import { IGUESS } from "@/models/home";
+import { IGuess } from "@/models/home";
 import Touchable from "@/components/Touchable";
 import { AntDesign } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 
 interface IProps {
   namespace: string;
+  goAlbum: (item: IGuess) => void;
 }
 
-const Guess: React.FC<IProps> = ({ namespace }) => {
+const Guess: React.FC<IProps> = ({ namespace, goAlbum }) => {
   const {
     home: { guess },
   } = useSelector((state: RootState) => state);
@@ -28,12 +29,9 @@ const Guess: React.FC<IProps> = ({ namespace }) => {
     });
   };
 
-  const renderItem = ({ item }: { item: IGUESS }) => {
+  const renderItem = ({ item }: { item: IGuess }) => {
     return (
-      <Touchable
-        style={styles.item}
-        onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-      >
+      <Touchable style={styles.item} onPress={() => goAlbum(item)}>
         <Image source={{ uri: item.image }} style={styles.image} />
         <Text numberOfLines={2}>{item.title}</Text>
       </Touchable>

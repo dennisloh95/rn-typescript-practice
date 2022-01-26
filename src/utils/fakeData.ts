@@ -1,6 +1,6 @@
-import { ICarousel, IChannel, IGUESS } from "@/models/home";
+import { ICarousel, IChannel, IGuess } from "@/models/home";
 
-export const fakeGuess: IGUESS[] = [
+export const fakeGuess: IGuess[] = [
   {
     id: "1",
     image:

@@ -13,7 +13,7 @@ export interface ICarousel {
   colors: [string, string];
 }
 
-export interface IGUESS {
+export interface IGuess {
   id: string;
   title: string;
   image: string;
@@ -38,7 +38,7 @@ interface HomeState {
   carousels: ICarousel[];
   activeCarouselIndex: number;
   gradientVisible: boolean;
-  guess: IGUESS[];
+  guess: IGuess[];
   channels: IChannel[];
   pagination: IPagination;
 }

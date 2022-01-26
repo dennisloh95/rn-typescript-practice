@@ -25,10 +25,6 @@ function renderTabBar(props: MaterialTopTabBarProps) {
 }
 
 function renderScreen(item: ICategory) {
-  // useEffect(() => {
-  //   createHomeModel(item.id);
-  // }, []);
-
   createHomeModel(item.id);
   return (
     <Tab.Screen
@@ -60,7 +56,6 @@ const HomeTabs = () => {
         tabBarScrollEnabled: true,
         tabBarStyle: {
           elevation: 0,
-          flex: 1,
           overflow: "hidden",
           backgroundColor: "transparent",
         },

@@ -15,7 +15,7 @@ import { RootState } from "@/models/index";
 import Carousel, { slideHeight } from "@/pages/Home/Carousel";
 import Guess from "@/pages/Home/Guess";
 import ChannelItem from "@/pages/Home/ChannelItem";
-import { IChannel } from "@/models/home";
+import { IChannel, IGuess } from "@/models/home";
 import { RouteProp } from "@react-navigation/native";
 import { HomeParamList } from "@/navigator/HomeTabs";
 
@@ -28,6 +28,7 @@ const Home: React.FC<IProps> = ({
   route: {
     params: { namespace },
   },
+  navigation,
 }) => {
   const state = useSelector((state: RootState) => state);
   const carousels = state[namespace].carousels;
@@ -49,12 +50,12 @@ const Home: React.FC<IProps> = ({
     });
   }, []);
 
-  const onPress = (data: IChannel) => {
-    console.log(data);
+  const goAlbum = (data: IChannel | IGuess) => {
+    navigation.navigate("Album", { item: data });
   };
 
   const renderItem = ({ item }: ListRenderItemInfo<IChannel>) => (
-    <ChannelItem data={item} onPress={onPress} />
+    <ChannelItem data={item} onPress={goAlbum} />
   );
 
   // why not use arrow function because it will always rerender
@@ -63,7 +64,7 @@ const Home: React.FC<IProps> = ({
       <View>
         <Carousel />
         <View style={styles.background}>
-          <Guess namespace={namespace} />
+          <Guess namespace={namespace} goAlbum={goAlbum} />
         </View>
       </View>
     );

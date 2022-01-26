@@ -19,6 +19,14 @@ const TopTabBarWrapper: React.FC<IProps> = (props) => {
   const insets = useSafeAreaInsets();
   const state = useSelector((state: RootState) => state);
   const { carousels, gradientVisible, activeCarouselIndex } = state[routeName];
+
+  let textStyle = styles.text;
+  useEffect(() => {
+    if (gradientVisible) {
+      textStyle = styles.whiteText;
+    }
+  }, [gradientVisible, props.navigation]);
+
   function linearGradient() {
     const linearColors = carousels[activeCarouselIndex]?.colors || [
       "#ccc",
@@ -30,13 +38,6 @@ const TopTabBarWrapper: React.FC<IProps> = (props) => {
     return null;
   }
 
-  let textStyle = styles.text;
-  useEffect(() => {
-    if (gradientVisible) {
-      textStyle = styles.whiteText;
-    }
-  }, [gradientVisible, props.navigation]);
-
   const goCategory = () => {
     const { navigation } = props;
     navigation.navigate("Category");
@@ -46,7 +47,9 @@ const TopTabBarWrapper: React.FC<IProps> = (props) => {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       {linearGradient()}
       <View style={styles.topTabBarView}>
-        <MaterialTopTabBar {...props} />
+        <View style={{ flex: 1 }}>
+          <MaterialTopTabBar {...props} />
+        </View>
         <Touchable style={styles.categoryBtn} onPress={goCategory}>
           <Text style={textStyle}>分类</Text>
         </Touchable>

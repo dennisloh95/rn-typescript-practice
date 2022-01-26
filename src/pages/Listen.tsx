@@ -9,7 +9,6 @@ interface IProps {
 const Listen: React.FC<IProps> = (props) => {
   const onPress = () => {
     const { navigation } = props;
-    navigation.navigate("Detail", { id: 100 });
   };
 
   return (

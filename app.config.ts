@@ -2,9 +2,6 @@ import { ExpoConfig, ConfigContext } from "@expo/config";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "hello-world",
-  slug: "hello-world",
-  extra: {
-    // apiUrl: process.env.API_URL,
-  },
+  name: "Ximalaya",
+  slug: "ximalaya",
 });

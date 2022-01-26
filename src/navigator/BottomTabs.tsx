@@ -27,10 +27,6 @@ type Route = RouteProp<RootStackParamList, "BottomTabs"> & {
   state?: TabNavigationState<ParamListBase>;
 };
 
-type State = {
-  state?: NavigationState;
-};
-
 interface IProps {
   navigation: RootStackNavigation;
   route: Route;

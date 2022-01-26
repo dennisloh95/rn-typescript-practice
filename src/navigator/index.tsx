@@ -13,15 +13,21 @@ import {
 import BottomTabs from "./BottomTabs";
 import Detail from "@/pages/Detail";
 import Category from "@/pages/Category";
+import Album from "@/pages/Album";
 import { Platform, StyleSheet, StatusBar } from "react-native";
+import { Animated } from "react-native";
 
 export type RootStackParamList = {
   BottomTabs: {
     screen?: string;
   };
   Category: undefined;
-  Detail: {
-    id: number;
+  Album: {
+    item: {
+      id: string;
+      title: string;
+      image: string;
+    };
   };
 };
 
@@ -55,6 +61,23 @@ function getHeaderTitle(route: RouteProp<RootStackParamList, "BottomTabs">) {
     default:
       return "首页";
   }
+}
+
+function getAlbumOptions({
+  route,
+}: {
+  route: RouteProp<RootStackParamList, "Album">;
+}) {
+  return {
+    headerTitle: route.params.item.title,
+    headerTransparent: true,
+    headerTitleStyle: {
+      opacity: 0,
+    },
+    headerBackground: () => {
+      return <Animated.View style={styles.headerBackground}></Animated.View>;
+    },
+  };
 }
 
 const Navigator = () => {
@@ -101,13 +124,21 @@ const Navigator = () => {
           options={{ headerTitle: "分类" }}
         />
         <Stack.Screen
-          name="Detail"
-          component={Detail}
-          options={{ headerTitle: "详情页" }}
+          name="Album"
+          component={Album}
+          options={getAlbumOptions}
         />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  headerBackground: {
+    flex: 1,
+    backgroundColor: "#fff",
+    opacity: 0,
+  },
+});
 
 export default Navigator;
